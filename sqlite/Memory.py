@@ -1,5 +1,5 @@
 import sqlite3
-import cPickle
+import pickle
 import os
 import random
 import time
@@ -31,7 +31,7 @@ def OpenMemory(botname):
 				else:
 					cache[val] = [key]
 	else:
-		cache = cPickle.load(chfile)
+		cache = pickle.load(chfile)
 		chfile.close()
 		os.remove(chfilename)
 	return (db, cache)
@@ -42,7 +42,7 @@ def CloseMemory(memorytuple, botname):
 	db.commit()
 	db.close()
 	chfile = open(chfilename,'w')
-	cPickle.dump(cache, chfile)
+	pickle.dump(cache, chfile)
 	chfile.close()
 
 def InsertMemory(memorytuple, string):

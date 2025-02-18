@@ -11,6 +11,7 @@ if ENABLEPROXY == True:
 	socket.socket = socks.socksocket
 
 from chatterbotapi import ChatterBotFactory, ChatterBotType
+import urllib.request
 
 import sys
 sys.path.append('../sqlite')
@@ -39,17 +40,17 @@ def chatbot(botname, remotebot, out=sys.stdout):
 			out.flush()
 			#maybe this could prevent bans from cleverbot
 			if RATELIMIT == True:
-				print "sleep",
+				print("sleep", end=' ')
 				while (thinkstart + ((len(msg) + 1) / 15)) > time.time():
 					time.sleep(1)
-					print ".",
+					print(".", end=' ')
 					sys.stdout.flush()
-				print
+				print()
 			
 			if LEARN == True:
 				LearnAndUpdateTerm(memory, termlst, p)
 	except (KeyboardInterrupt, SystemExit, EOFError):
-		print "Saving..."
+		print("Saving...")
 		out.write("END LOG: %s\n" % time.ctime())
 		out.close()
 		CloseMemory(memory, botname)
@@ -71,4 +72,4 @@ if __name__ == '__main__':
 		bot1session.pandorabots_url = 'http://fiddle.pandorabots.com/pandora/talk-xml' #mitsuku doesn't work with the normal url
 		chatbot(botname, bot1session, f)
 	else:
-		print "Invalid argument"
+		print("Invalid argument")

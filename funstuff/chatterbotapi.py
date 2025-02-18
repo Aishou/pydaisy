@@ -1,6 +1,6 @@
-import md5
-import urllib
-import urllib2
+import hashlib
+import urllib.parse
+import urllib.request
 import uuid
 import xml.dom.minidom
 
@@ -92,14 +92,14 @@ class _CleverbotSession(ChatterBotSession):
         
     def think_thought(self, thought):
         self.vars['stimulus'] = thought.text
-        data = urllib.urlencode(self.vars)
+        data = urllib.parse.urlencode(self.vars)
         data_to_digest = data[9:self.bot.endIndex]
-        data_digest = md5.new(data_to_digest).hexdigest()
+        data_digest = hashlib.md5(data_to_digest.encode()).hexdigest()
         data = data + '&icognocheck=' + data_digest
-        opener = urllib2.build_opener()
+        opener = urllib.request.build_opener()
         opener.addheaders = [('User-agent', self.user_agent)]
-        url_response = opener.open(self.bot.url, data)
-        response = url_response.read()
+        url_response = opener.open(self.bot.url, data.encode())
+        response = url_response.read().decode()
         response_values = response.split('\r')
         #self.vars['??'] = _utils_string_at_index(response_values, 0)
         self.vars['sessionid'] = _utils_string_at_index(response_values, 1)
@@ -151,9 +151,9 @@ class _PandorabotsSession(ChatterBotSession):
 
     def think_thought(self, thought):
         self.vars['input'] = thought.text
-        data = urllib.urlencode(self.vars)
-        url_response = urllib2.urlopen(self.pandorabots_url, data)
-        response = url_response.read()
+        data = urllib.parse.urlencode(self.vars)
+        url_response = urllib.request.urlopen(self.pandorabots_url, data.encode())
+        response = url_response.read().decode()
         response_dom = xml.dom.minidom.parseString(response)
         response_thought = ChatterBotThought()
         response_thought.text = response_dom.getElementsByTagName('that')[0].childNodes[0].data.strip()
