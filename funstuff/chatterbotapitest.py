@@ -34,9 +34,9 @@ bot2session.pandorabots_url = 'http://fiddle.pandorabots.com/pandora/talk-xml' #
 s = 'Hi'
 while (1):
     
-    print 'bot1> ' + s
+    print('bot1> ' + s)
     
     s = bot2session.think(s);
-    print 'bot2> ' + s
+    print('bot2> ' + s)
     sys.stdout.flush()
     s = bot1session.think(s);
